@@ -1,0 +1,63 @@
+@import './base.css';
+@import '@coreui/coreui/dist/css/coreui.min.css';
+#app {
+  max-width: 1920px;
+  margin: 0 auto;
+  padding: 2rem;
+  font-weight: normal;
+}
+
+a,
+.green {
+  text-decoration: none;
+  color: hsla(160, 100%, 37%, 1);
+  transition: 0.4s;
+}
+
+.container-sm{
+  max-width: 960px;
+}
+
+.btn{
+  background-color: var(--vt-c-green);
+  color: var(--vt-c-white);
+  height: 35px;
+}
+
+.card{
+  width: 200px;
+  max-width: 200px;
+  height: 280px;  
+  max-height: 300px;
+  object-fit: contain;
+  margin: 5px 5px 5px 5px;
+}
+
+.card-img-top{
+  width: auto; 
+  height: 120px; 
+  object-fit: contain;
+}
+
+.card-title{
+  font-size: 16px;
+  height:40px;
+}
+
+@media (hover: hover) {
+  a:hover {
+    background-color: hsla(160, 100%, 37%, 0.2);
+  }
+}
+
+/* @media (min-width: 1024px) {
+  body {
+    display: grid;
+  }
+
+  #app {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    padding: 0 2rem;
+  }
+} */
