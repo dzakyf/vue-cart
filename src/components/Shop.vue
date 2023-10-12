@@ -6,7 +6,7 @@
             <CCard>
             <CCardImage orientation="top" :src="product.variants[0].images[0]" />
             <CCardBody>
-                <p>{{ product.price }}</p>
+                <p>{{ formatRupiah(product.price) }}</p>
                 <CCardTitle>{{ product.name }}</CCardTitle>
                 <div class="d-flex justify-content-end">
                 <CButton color="light" href="#">Add to cart</CButton>
@@ -17,13 +17,7 @@
     </div>
   </div>  
 </template>
-<script>
+<script setup>
     import data from '@/mock/data_shop.json' 
-    export default{
-        data() {
-            return {
-                data: data
-            }
-        }
-    }
+    import { formatRupiah } from '../utils/utils.js'
 </script>
