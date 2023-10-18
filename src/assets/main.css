@@ -27,8 +27,8 @@ a,
 .card{
   width: 200px;
   max-width: 200px;
-  height: 280px;  
-  max-height: 300px;
+  height: 320px;  
+  max-height: 360px;
   object-fit: contain;
   margin: 5px 5px 5px 5px;
 }
@@ -42,6 +42,14 @@ a,
 .card-title{
   font-size: 16px;
   height:40px;
+}
+
+.form-control{
+  padding: 0 0 0 0;
+}
+
+.input-group> .form-control {
+  flex : 0.5 0.5 auto;
 }
 
 @media (hover: hover) {
