@@ -4,19 +4,15 @@ import HelloWorld from './components/HelloWorld.vue'
 </script>
 
 <template>
-  <!-- <header>
-    <img alt="Vue logo" class="logo" src="@/assets/logo.svg" width="125" height="125" />
+  <header>
 
-    <div class="wrapper">
-      <HelloWorld msg="You did it!" />
-
+    <div class="container-md d-flex justify-content-end nav-wrapper">
       <nav>
-        <RouterLink to="/">Home</RouterLink>
-        <RouterLink to="/about">About</RouterLink>
+        <RouterLink class="m-2 p-2" to="/shop">Shop</RouterLink>
+        <RouterLink class="m-2 p-2" to="/cart">Cart</RouterLink>
       </nav>
     </div>
-  </header> -->
-
+  </header>
   <RouterView />
 </template>
 

@@ -1,11 +1,45 @@
 import { defineStore } from 'pinia'
-import { ref } from 'vue'
+import { ref,watch } from 'vue'
+
+export const useLocalStorage = defineStore('localStorage', () => {
+    const cart  = useCart()
+
+    function get(key){
+        const value = localStorage.getItem(key)
+        
+        try{
+            return (typeof value === "string") 
+            ? JSON.parse(value) : (typeof value === "object") 
+            ? value : undefined
+
+
+        }catch(err){
+
+        }
+
+        return undefined
+    }
+
+    function set(key){
+        localStorage.setItem(key, JSON.stringify(cart.cart)) 
+    }
+
+    return { get, set }
+})
 
 export const useCart = defineStore('cart', () => {
-    let cart = ref([])
+    let ls_key = "cart"
+    let ls = useLocalStorage()
+    let cart =  ls.get(ls_key) ? ref(ls.get(ls_key)) :ref([])
+    let totalCart = ref(0)
+   
     
     function findProductById(id){
         return cart.value.find((element) => element.id === id)
+    }
+
+    function findProductByVariant(variant_id){
+        return cart.value.find((element) => element.selected_variant.id === variant_id)
     }
 
     function findIndexProduct(id){
@@ -18,28 +52,37 @@ export const useCart = defineStore('cart', () => {
     
     function addToCart(item){
         let found_item = findProductById(item.id)
+        let found_product_by_variant = findProductByVariant(item.selected_variant.id)
+
+        //insert new
+        if(!found_item || !found_product_by_variant) { 
+            let new_item = {
+                ...item,
+                cart_qty: 1,
+                total_price: item.price, 
+            }
+            cart.value =[...cart.value, new_item]
+        }
 
         //update
-        if(found_item){
-            found_item['cart_qty'] += 1
-            found_item['total_price'] = getTotalPricePerItem(found_item)
+        if(found_item && found_product_by_variant){
+           found_product_by_variant['cart_qty'] += 1
+           found_product_by_variant['total_price'] = getTotalPricePerItem(found_product_by_variant)
         }
+        // calculateTotalCart()
 
-        //insert
-        if(found_item === undefined) { 
-            item['cart_qty'] = 1
-            item['total_price'] = item['price']
-            cart.value.push(item)
-        }
+        ls.set(ls_key)
         
         log(`added ${item.name} by 1`)
     }
 
-    function incrementQuantity(item, qty){
+    function incrementQuantity(item ){
         let found_item = findProductById(item.id)
+        
         found_item['cart_qty'] += 1
         found_item['total_price'] = getTotalPricePerItem(found_item)
-
+        calculateTotalCart()
+        ls.set(ls_key)
         log("incremented by 1")
     }
 
@@ -49,9 +92,11 @@ export const useCart = defineStore('cart', () => {
         if(found_item && found_item['cart_qty'] > 1){
             found_item['cart_qty'] -= 1
             found_item['total_price'] = getTotalPricePerItem(found_item)
+            ls.set(ls_key)
         }else{
             removeFromCart(item)
         }
+        
 
         log("decremented by 1")
     }
@@ -59,15 +104,16 @@ export const useCart = defineStore('cart', () => {
     function removeFromCart(item){
         console.log(`${item.name} removed!`)
         cart.value = cart.value.filter((element) => element.id !== item.id)
+        ls.set(ls_key)
         return
     }
 
     function calculateTotalCart(){
-        let total = cart.value.reduce((accumulator, currentValue) => {
-            accumulator.total_price + currentValue.total.price
-        },0)
-
-        cart.value.total = total
+        let total_sum = cart.value.reduce((accumulator, currentValue) => 
+             accumulator + currentValue.total_price
+        ,0)
+       
+        return total_sum
     }
 
     function updateCart(action, item){
@@ -96,6 +142,7 @@ export const useCart = defineStore('cart', () => {
 
     return { 
         cart, 
+        totalCart,
         addToCart,
         incrementQuantity,
         decrementQuantity,
